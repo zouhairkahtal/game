@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Airplane from "../public/airplane.svg";
+import cloud from "../public/cloud-svgrepo-com.svg";
 
 type FallingItem = {
   id: number;
@@ -61,25 +62,35 @@ function App() {
   }, []);
 
   // Collision detection
-  useEffect(() => {
-    items.forEach((item) => {
-      const distX = Math.abs(item.left - y);
-      const distY = Math.abs(item.top - x);
+useEffect(() => {
+  items.forEach((item) => {
 
-      if (distX <40 && distY < 40) {
-        alert("You lose!");
-        window.location.reload();
-      }
-    });
-  }, [items, x, y]);
+    const airplaneWidth = 128;
+    const airplaneHeight = 128;
+
+    const itemSize = 40;
+
+    const isCollision =
+      item.left < y + airplaneWidth &&
+      item.left + itemSize > y &&
+      item.top < x + airplaneHeight &&
+      item.top + itemSize > x;
+
+    if (isCollision) {
+      alert("You lose!");
+      window.location.reload();
+    }
+  });
+}, [items, x, y]);
 
   return (
     <div className="w-full h-screen bg-sky-300 relative overflow-hidden">
 
       {items.map((item) => (
-        <div
+        <img
+        src={cloud}
           key={item.id}
-          className="w-10 h-10 bg-red-500 rounded-full absolute"
+          className="w-20 h-20   rounded-3xl absolute"
           style={{
             top: item.top,
             left: item.left,
@@ -87,13 +98,16 @@ function App() {
         />
       ))}
 
-   
-        <img className=" w-32 h-32 absolute -rotate-45 " src={Airplane}
-        style={{
+<div className=" absolute " style={{
           top: x,
           left: y,
-          transition: "0.15s ease",
-        }} />
+          
+        }} >
+
+   
+        <img className=" w-32 h-32   -rotate-45 " src={Airplane}
+        />
+        </div>
       </div>
 
   );
